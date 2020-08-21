@@ -1,5 +1,5 @@
 import React from 'react'
 
-const IndexPage = () => <div>Chewie we're home</div>
+const HomePage: React.FunctionComponent = () => <div>Chewie we&apos;re home</div>
 
-export default IndexPage
+export default HomePage

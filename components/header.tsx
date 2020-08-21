@@ -2,7 +2,7 @@ import React from 'react'
 
 const Header: React.FunctionComponent = ({ children }) => (
   <header>
-    <h2>My next gen site</h2>
+    <h1>My next gen site</h1>
     {children}
   </header>
 )
