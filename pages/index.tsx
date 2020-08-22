@@ -1,5 +1,31 @@
 import React from 'react'
+import { GetStaticProps } from 'next'
+import { findAllPaths } from 'api/docs'
 
-const HomePage: React.FunctionComponent = () => <div>Chewie we&apos;re home</div>
+type Props = {
+  paths: string[]
+}
+
+const HomePage: React.FunctionComponent<Props> = ({ paths }) => (
+  <>
+    <h2>Chewie we&apos;re home</h2>
+    <div>
+      <ul>
+        {paths}
+      </ul>
+    </div>
+  </>
+)
 
 export default HomePage
+
+export const getStaticProps: GetStaticProps<Props> = async () => {
+
+  const paths = await findAllPaths()
+
+  return {
+    props: {
+      paths
+    }
+  }
+}

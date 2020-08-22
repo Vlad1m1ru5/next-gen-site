@@ -1,5 +1,4 @@
-import promises from 'fs/promises'
-import { Dirent } from 'fs'
+import { promises, Dirent } from 'fs'
 
 type Chapter = {
   name: string
@@ -20,25 +19,28 @@ const getIsChapterIn = (base: string) => (
   }
 )
 
-const getChapter = (path: string) => (
-  async ({ name }: Dirent): Chapter => {
+const getChapterIn = (path: string) => (
+  async ({ name }: Dirent) => {
 
     const chapter = {
       path: `${path}${name}`,
-      name: ''
+      name
     }
 
     return chapter
   }
 )
 
-export const findAllChapters = async (path = './_docs/'): Promise<Chapter[]> => {
+export const findAllChaptersIn = async (path = './_docs/'): Promise<Chapter[]> => {
   const entries = await findAllEntriesIn(path)
 
-  const chapters = entries
-    .filter((entire) => entire.isDirectory())
-    .filter(getIsChapterIn(path))
-    .map(getChapterIn(path))
+  const chapters = Promise
+    .all(entries
+      .filter((entire) => entire.isDirectory())
+      .filter(getIsChapterIn(path))
+      .map(getChapterIn(path))
+    )
+    .then(chapters => chapters)
 
   return chapters
 }

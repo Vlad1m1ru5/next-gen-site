@@ -1,4 +1,12 @@
-import { findAllChapters } from 'utils'
+import { findAllChaptersIn } from 'utils'
+
+export const findAllPaths = async (): Promise<string[]> => {
+  
+  const chapters = await findAllChaptersIn()
+  const paths = chapters.map(({ path }) => path)
+
+  return paths
+}
 
 export const findAllTitles = async (): Promise<string[]> => {
   

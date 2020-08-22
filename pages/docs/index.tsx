@@ -1,8 +1,9 @@
 import React from 'react'
-import { findAllTitles, findAllByTitleIn } from 'api/docs'
-import Link from 'next/link'
 import { GetStaticProps } from 'next'
 import { useRouter } from 'next/dist/client/router'
+import Link from 'next/link'
+import { findAllTitles, findAllByTitleIn } from 'api/docs'
+import List from 'components/list'
 
 type Props = {
   slugs: string[]
@@ -23,20 +24,15 @@ const DocsPage: React.FunctionComponent<Props> = ({ slugs }) => {
     </Link>
   )
 
-  const getItem = (component: JSX.Element, index: number) => (
-    <li key={index}>{component}</li>
-  )
-
   return (
     <>
       <h2>Documentation page</h2>
-      <ul>
+      <List>
         {slugs
           .map(getAbsUrl)
           .map(getLink)
-          .map(getItem)
         }
-      </ul>
+      </List>
     </>
   )
 }
