@@ -1,10 +1,14 @@
+import { findAllChapters } from 'utils'
+
 export const findAllTitles = async (): Promise<string[]> => {
   
-  return [
+  const titles = [
     'First Page',
     'Second Page',
     'Third Page'
   ]
+
+  return titles
 }
 
 export const findAllByTitleIn = async (titles: string[] = []): Promise<string[]> => {
