@@ -1,6 +1,6 @@
 import React from 'react'
 import { GetStaticProps } from 'next'
-import { findAllPaths } from 'api/docs'
+import { findAllPaths, getAbsUrl } from 'api/docs'
 import List from 'components/list'
 
 type Props = {
@@ -22,7 +22,8 @@ export default HomePage
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
 
-  const paths = await findAllPaths()
+  const paths = (await findAllPaths())
+    .map(getAbsUrl)
 
   return {
     props: {

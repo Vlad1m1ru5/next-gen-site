@@ -65,3 +65,5 @@ export const findAllFoldersPathsIn = async (path = './_docs/'): Promise<string[]
     return []
   }
 }
+
+export const getAbsPath = (path: string, base = './_docs/'): string => path.replace(base, '')

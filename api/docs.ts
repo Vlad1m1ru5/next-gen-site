@@ -26,3 +26,5 @@ export const findAllByTitleIn = async (titles: string[] = []): Promise<string[]>
 
   return paths
 }
+
+export const getAbsUrl = (path: string): string => `/${getAbsPath(path)}`
