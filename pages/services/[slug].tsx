@@ -1,6 +1,6 @@
 import React from 'react'
 import { GetStaticPaths, GetStaticProps } from 'next'
-import { getAllPaths, getAllEntriesIn, getAllTomesIn, getAbsUrl } from 'api/docs'
+import { getAllPaths, getAllEntriesIn, getAllTomesIn } from 'api/docs'
 
 type Params = {
   slug: string
@@ -30,11 +30,15 @@ export const getStaticProps: GetStaticProps<Props, Params> = async ({ params }) 
 export const getStaticPaths: GetStaticPaths<Params> = async () => {
 
   const folders = await getAllPaths()
+  console.log(folders)
+  
   const entries = await getAllEntriesIn(folders)
+  console.log(entries)
+  
   const tomes = await getAllTomesIn(entries)
-  const slugs = tomes.map(getAbsUrl)
-
-  const paths = slugs
+  console.log(tomes)
+  
+  const paths = tomes
     .map(slug => ({ slug }))
     .map((params) => ({ params }))
 

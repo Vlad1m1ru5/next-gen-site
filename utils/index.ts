@@ -1,6 +1,6 @@
 import { promises, Dirent } from 'fs'
 
-const defaultPath = './_docs/'
+export const defaultPath = './_docs/'
 
 export const findAllEntriesFor = async (path: string): Promise<Dirent[]> => (
   await promises.readdir(path, { withFileTypes: true })
@@ -30,10 +30,32 @@ export const findAllFoldersPathsFor = async (base = defaultPath): Promise<string
   }
 }
 
-export const getAbsPath = ({
-  path,
-  base = defaultPath
-}: {
-  path: string,
-  base?: string
-}): string => path.replace(base, '')
+export const findAllFolders = async (base = defaultPath): Promise<string[]> => {
+  try {
+    const entries = await findAllEntriesFor(base)
+
+    const folders = entries
+      .filter((entry) => entry.isDirectory())
+      .map(({ name }) => name)
+
+    return folders
+  } catch (error) {
+    return []
+  }
+}
+
+export const findAllServicesIn = async (folders: string[]): Promise<string[]> => {
+  const services: string[] = []
+  
+  try {
+    for (const folder of folders) {
+      if(await getIsIndexFor(`${defaultPath}${folder}`)) {
+        services.push(folder)
+      }
+    }
+  
+    return services
+  } catch (error) {
+    return services
+  }
+}

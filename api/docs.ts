@@ -1,4 +1,4 @@
-import { findAllFoldersPathsFor, getAbsPath, getIsIndexFor } from 'utils'
+import { findAllFoldersPathsFor, getIsIndexFor, findAllFolders } from 'utils'
 
 export const getAllPaths = async (): Promise<string[]> => {
   
@@ -6,8 +6,6 @@ export const getAllPaths = async (): Promise<string[]> => {
 
   return paths
 }
-
-export const getAbsUrl = (path: string): string => `/${getAbsPath({ path })}`
 
 export const getAllEntriesIn = async (paths: string[]): Promise<string[]> => {
  
@@ -36,3 +34,5 @@ export const getAllTomesIn = async (paths: string[]): Promise<string[]> => {
 
   return tomes
 }
+
+export const getRoutesFor = (path: string): string => path
