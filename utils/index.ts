@@ -1,5 +1,5 @@
 import { promises, Dirent } from 'fs'
-import path from 'path'
+import matter from 'gray-matter'
 
 export const defaultPath = './_docs/'
 
@@ -44,31 +44,23 @@ export const findAllServicesIn = async (folders: string[]): Promise<string[]> =>
   }
 }
 
-export const getTopicBySlug = (slug: string, fields: string[]): Items => {
-  const topicPath = topicsDirectory, `index.md`
-  const topicFile = fs.readFileSync(topicPath, "utf-8")
-  const { data, content } = matter(topicFile)
+export const getServiceBy = async (slug: string, fields: string[]): Promise<Service> => {
+  const path = `${defaultPath}${slug}/index.md`
+  const file = await promises.readFile(path)
+  const { data, content } = matter(file)
 
-  const fieldsItems = fields
-    .reduce((items, field) => {
- 
-      if (field === 'slug') {
-        items[field] = slug
-      }
+  const service = fields.reduce((service, field) => {
+    switch (field) {
+      case 'content':
+        service['content'] = content
+        return service
+      default:
+        if (data[field]) {
+          service[field] = data[field]
+        }
+        return service
+    }
+  }, {} as Service)
 
-      if (field === 'content') {
-        items[field] = content
-      }
-        
-      const dataByField = data[field]
-          
-      if (dataByField){
-        items[field] = dataByField
-      }
-
-      return items
-
-  }, defaultItems)
-  
-  return fieldsItems
+  return service
 }

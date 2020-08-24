@@ -1,17 +1,29 @@
 import React from 'react'
 import { GetStaticPaths, GetStaticProps } from 'next'
-import { findAllFolders, findAllServicesIn } from 'utils'
+import { findAllFolders, findAllServicesIn, getServiceBy } from 'utils'
+import markdownToHtml from 'utils/markdown-to-html'
 
 type Params = {
   slug: string
 } 
 
 type Props = {
-  title: string
+  service: {
+    content: string
+    title: string
+  }
 }
 
-const DocPage: React.FunctionComponent<Props> = ({ title }) => (
-  <h2>{title}</h2>
+const DocPage: React.FunctionComponent<Props> = ({
+  service: {
+    title,
+    content
+  }
+}) => (
+  <>
+    <h2>{title}</h2>
+    <div dangerouslySetInnerHTML={{ __html: content }}></div>
+  </>
 )
 
 export default DocPage
@@ -19,10 +31,15 @@ export default DocPage
 export const getStaticProps: GetStaticProps<Props, Params> = async ({ params }) => {
   
   const title = params?.slug || ''
+  const service = await getServiceBy(title, [ 'content', 'title' ])
+  const content = await markdownToHtml(service.content)
 
   return {
     props: {
-      title
+      service: {
+        ...service,
+        content
+      }
     }
   }
 }
