@@ -44,7 +44,7 @@ export const findAllServicesIn = async (folders: string[]): Promise<string[]> =>
   }
 }
 
-export const getServiceBy = async (slug: string, fields: string[]): Promise<Service> => {
+export const getServiceBy = async (slug: string, fields: Field[]): Promise<Service> => {
   const path = `${defaultPath}${slug}/index.md`
   const file = await promises.readFile(path)
   const { data, content } = matter(file)

@@ -1,5 +1,6 @@
 
+type Field = 'content' | 'title'
+
 type Service = {
-  content: string
-  title: string
+  [K in Field]: string
 }
