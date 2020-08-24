@@ -2,7 +2,7 @@ import React from 'react'
 import { GetStaticProps } from 'next'
 import { useRouter } from 'next/dist/client/router'
 import Link from 'next/link'
-import { findAllTitles, findAllByTitleIn } from 'api/docs'
+import { getAllPaths, getAllEntriesIn, getAllTomesIn, getAbsUrl } from 'api/docs'
 import List from 'components/list'
 
 type Props = {
@@ -13,7 +13,7 @@ const DocsPage: React.FunctionComponent<Props> = ({ slugs }) => {
   
   const { route } = useRouter()
 
-  const getAbsUrl = (slug: string) => `${route}/${slug}`
+  const getAbsUrl = (slug: string) => `${route}${slug}`
 
   const getLink = (path: string, index: number) => (
     <Link
@@ -41,8 +41,10 @@ export default DocsPage
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
 
-  const titles = await findAllTitles()
-  const slugs = await findAllByTitleIn(titles)
+  const paths = await getAllPaths()
+  const entries = await getAllEntriesIn(paths)
+  const tomes = await getAllTomesIn(entries)
+  const slugs = tomes.map(getAbsUrl)
 
   return {
     props: {

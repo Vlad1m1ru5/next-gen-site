@@ -1,27 +1,27 @@
 import { promises, Dirent } from 'fs'
 
-export const findAllEntries = async (path: string): Promise<Dirent[]> => (
+const defaultPath = './_docs/'
+
+export const findAllEntriesFor = async (path: string): Promise<Dirent[]> => (
   await promises.readdir(path, { withFileTypes: true })
 )
 
-export const getIsIndexIn = async (path: string): Promise<boolean> => {
-  const entries = await findAllEntries(path)
+export const getIsIndexFor = async (path: string): Promise<boolean> => {
+  const entries = await findAllEntriesFor(path)
   const isEntry = entries.some(({ name }) => name === 'index.md')
 
   return isEntry
 }
 
-const defaultPath = './_docs/'
-
-export const findAllFoldersPathsIn = async (base = defaultPath): Promise<string[]> => {
+export const findAllFoldersPathsFor = async (base = defaultPath): Promise<string[]> => {
   try {
-    const entries = await findAllEntries(base)
+    const entries = await findAllEntriesFor(base)
 
     const folders = entries.filter((entry) => entry.isDirectory())
     const paths = folders.map(({ name }) => `${base}${name}/`)
 
     for (const path of paths) {
-      paths.push(...await findAllFoldersPathsIn(path))
+      paths.push(...await findAllFoldersPathsFor(path))
     }
 
     return paths
@@ -30,4 +30,10 @@ export const findAllFoldersPathsIn = async (base = defaultPath): Promise<string[
   }
 }
 
-export const getAbsPath = (path: string, base = defaultPath): string => path.replace(base, '')
+export const getAbsPath = ({
+  path,
+  base = defaultPath
+}: {
+  path: string,
+  base?: string
+}): string => path.replace(base, '')
