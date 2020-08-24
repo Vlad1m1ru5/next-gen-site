@@ -1,9 +1,8 @@
-import { findAllChaptersIn } from 'utils'
+import { findAllFoldersPathsIn, getAbsPath } from 'utils'
 
 export const findAllPaths = async (): Promise<string[]> => {
   
-  const chapters = await findAllChaptersIn()
-  const paths = chapters.map(({ path }) => path)
+  const paths = await findAllFoldersPathsIn()
 
   return paths
 }

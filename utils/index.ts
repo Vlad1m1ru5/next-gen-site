@@ -48,3 +48,20 @@ export const findAllChaptersIn = async (path = './_docs/'): Promise<Chapter[]> =
     return []
   }
 }
+
+export const findAllFoldersPathsIn = async (path = './_docs/'): Promise<string[]> => {
+  try {
+    const entries = await findAllEntriesIn(path)
+
+    const folders = entries.filter((entry) => entry.isDirectory())
+    const paths = folders.map(({ name }) => `${path}${name}/`)
+
+    for (const path of paths) {
+      paths.push(...await findAllFoldersPathsIn(path))
+    }
+
+    return paths
+  } catch (error) {
+    return []
+  }
+}
