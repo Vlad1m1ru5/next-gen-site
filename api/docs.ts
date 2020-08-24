@@ -1,30 +1,23 @@
-import { findAllFoldersPathsIn, getAbsPath } from 'utils'
+import { findAllFoldersPathsIn, getAbsPath, getIsIndexIn } from 'utils'
 
-export const findAllPaths = async (): Promise<string[]> => {
+export const getAllPaths = async (): Promise<string[]> => {
   
   const paths = await findAllFoldersPathsIn()
 
   return paths
 }
 
-export const findAllTitles = async (): Promise<string[]> => {
-  
-  const titles = [
-    'First Page',
-    'Second Page',
-    'Third Page'
-  ]
-
-  return titles
-}
-
-export const findAllByTitleIn = async (titles: string[] = []): Promise<string[]> => {
-
-  const paths = titles
-    .map(title => title.toLocaleLowerCase())
-    .map(title => title.trim().replace(' ', '-'))
-
-  return paths
-}
-
 export const getAbsUrl = (path: string): string => `/${getAbsPath(path)}`
+
+export const getAllEntriesIn = async (paths: string[]): Promise<string[]> => {
+ 
+  const entries = []
+
+  for (const path of paths) {
+    if (await getIsIndexIn(path)) {
+      entries.push(path)
+    }
+  }
+
+  return entries
+}

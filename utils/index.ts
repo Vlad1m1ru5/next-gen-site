@@ -1,60 +1,24 @@
 import { promises, Dirent } from 'fs'
 
-type Chapter = {
-  name: string
-  path: string
-}
-
-const findAllEntriesIn = async (path: string): Promise<Dirent[]> => (
+export const findAllEntries = async (path: string): Promise<Dirent[]> => (
   await promises.readdir(path, { withFileTypes: true })
 )
 
-const getIsChapterIn = (base: string) => (
-  async (folder: Dirent) => {
-    const path = `${base}${folder.name}`
+export const getIsIndexIn = async (path: string): Promise<boolean> => {
+  const entries = await findAllEntries(path)
+  const isEntry = entries.some(({ name }) => name === 'index.md')
 
-    const entries = await findAllEntriesIn(path)
-
-    return entries.some(({ name }) => name === 'index.md')
-  }
-)
-
-const getChapterIn = (path: string) => (
-  async ({ name }: Dirent) => {
-
-    const chapter = {
-      path: `${path}${name}`,
-      name
-    }
-
-    return chapter
-  }
-)
-
-export const findAllChaptersIn = async (path = './_docs/'): Promise<Chapter[]> => {
-  try {
-    const entries = await findAllEntriesIn(path)
-
-    const chapters = Promise
-      .all(entries
-        .filter((entry) => entry.isDirectory())
-        .filter(getIsChapterIn(path))
-        .map(getChapterIn(path))
-      )
-      .then(chapters => chapters)
-
-    return chapters
-  } catch (error) {
-    return []
-  }
+  return isEntry
 }
 
-export const findAllFoldersPathsIn = async (path = './_docs/'): Promise<string[]> => {
+const defaultPath = './_docs/'
+
+export const findAllFoldersPathsIn = async (base = defaultPath): Promise<string[]> => {
   try {
-    const entries = await findAllEntriesIn(path)
+    const entries = await findAllEntries(base)
 
     const folders = entries.filter((entry) => entry.isDirectory())
-    const paths = folders.map(({ name }) => `${path}${name}/`)
+    const paths = folders.map(({ name }) => `${base}${name}/`)
 
     for (const path of paths) {
       paths.push(...await findAllFoldersPathsIn(path))
@@ -66,4 +30,4 @@ export const findAllFoldersPathsIn = async (path = './_docs/'): Promise<string[]
   }
 }
 
-export const getAbsPath = (path: string, base = './_docs/'): string => path.replace(base, '')
+export const getAbsPath = (path: string, base = defaultPath): string => path.replace(base, '')
