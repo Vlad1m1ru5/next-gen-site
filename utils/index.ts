@@ -37,7 +37,7 @@ export const findAllChaptersIn = async (path = './_docs/'): Promise<Chapter[]> =
 
     const chapters = Promise
       .all(entries
-        .filter((entire) => entire.isDirectory())
+        .filter((entry) => entry.isDirectory())
         .filter(getIsChapterIn(path))
         .map(getChapterIn(path))
       )
