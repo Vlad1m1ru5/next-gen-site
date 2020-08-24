@@ -2,7 +2,7 @@ import React from 'react'
 import List from 'components/list'
 import Link from 'next/link'
 import { GetStaticProps } from 'next'
-import { getAllPaths, getAllEntriesIn, getAllTomesIn, getRoutesFor } from 'api/docs'
+import { useRouter } from 'next/dist/client/router'
 
 type Props = {
   routes: string[]
@@ -10,7 +10,9 @@ type Props = {
 
 const HomePage: React.FunctionComponent<Props> = ({ routes }) => {
 
-  const getAbsUrl = (slug: string) => `/${slug}`
+  const { route } = useRouter()
+
+  const getAbsUrl = (slug: string) => `${route}${slug}`
 
   const getLink = (path: string, index: number) => (
     <Link
@@ -23,7 +25,7 @@ const HomePage: React.FunctionComponent<Props> = ({ routes }) => {
 
   return (
     <>
-      <h2>Navigate through pages</h2>
+      <h2>Home Page</h2>
       <div>
         <List>
           {routes
@@ -40,11 +42,8 @@ export default HomePage
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
 
-  const paths = await getAllPaths()
-  const entries = await getAllEntriesIn(paths)
-  const tomes = await getAllTomesIn(entries)
-  const routes = tomes.map(getRoutesFor)
-  
+  const routes = ['services']
+
   return {
     props: {
       routes
