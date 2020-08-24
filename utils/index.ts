@@ -32,15 +32,19 @@ const getChapterIn = (path: string) => (
 )
 
 export const findAllChaptersIn = async (path = './_docs/'): Promise<Chapter[]> => {
-  const entries = await findAllEntriesIn(path)
+  try {
+    const entries = await findAllEntriesIn(path)
 
-  const chapters = Promise
-    .all(entries
-      .filter((entire) => entire.isDirectory())
-      .filter(getIsChapterIn(path))
-      .map(getChapterIn(path))
-    )
-    .then(chapters => chapters)
+    const chapters = Promise
+      .all(entries
+        .filter((entire) => entire.isDirectory())
+        .filter(getIsChapterIn(path))
+        .map(getChapterIn(path))
+      )
+      .then(chapters => chapters)
 
-  return chapters
+    return chapters
+  } catch (error) {
+    return []
+  }
 }
